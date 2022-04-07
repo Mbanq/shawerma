@@ -1,0 +1,51 @@
+{
+  "name": "@mbanq/shawerma",
+  "version": "1.0.0",
+  "description": "Goodies for AWS λ",
+  "main": "dist/index.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "prepublish": "tsc && cp types.d.ts dist",
+    "build": "tsc && cp types.d.ts dist",
+    "test": "jest --silent --colors --config=jest.config.js",
+    "test:ci": "jest --ci --config=jest.config.js --reporters=default --reporters=jest-junit",
+    "test:watch": "jest --colors --config=jest.config.js --watchAll",
+    "lint": "eslint '*/**/*.{js,ts}'"
+  },
+  "keywords": [
+    "λ",
+    "lambda",
+    "serverless",
+    "API gateway",
+    "API",
+    "http code",
+    "error",
+    "code",
+    "AWS"
+  ],
+  "author": {
+    "name": "FinLink, Inc.",
+    "email": "dev@mbanq.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/mbanq/shawerma",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mbanq/shawerma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mbanq/shawerma/issues"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.36",
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "jest-junit": "^13.0.0",
+    "standard": "^16.0.4",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1"
+  }
+}
