@@ -3,7 +3,7 @@ import * as Cors from '../cors'
 export default (
   statusCode: number = 404,
   message: string = 'Not Found',
-  cors = true
+  cors: boolean = true
 ): {
   statusCode: number,
   body: string,

@@ -4,7 +4,7 @@
   <img src="./shawerma.png" />
 </p>
 
-Since we're extensively using `AWS λ`, we thouhgt that we need a bunch of
+Since we're extensively using `AWS λ`, we thought that we need a bunch of
 helpers that we can reuse in all our customer facing `λ`-based API.
 
 For now we only support unified `http error` objects, `http responses` and some
@@ -12,10 +12,21 @@ For now we only support unified `http error` objects, `http responses` and some
 (they went out of business).
 
 ```js
-const shawerma = require('shawerma');
-const log = shawerma.log;
-const HttpError = shawerma.HttpError;
-const Response = shawerma.Response;
+const { log, HttpError, Response } = require('shawerma');
+
+// or by using import
+
+import { log, HttpError, Response } from 'shawerma';
+```
+
+Since this version of `shawerma` supports `typescript` you can also import types by doing the following:
+
+```js
+const { HttpErrorType, ResponseType } = require('shawerma')
+
+// or by using import
+
+import { HttpErrorType, ResponseType } from 'shawerma';
 ```
 
 ## HTTP Error
@@ -23,8 +34,8 @@ const Response = shawerma.Response;
 a callback.
 
 `HttpError` function will take up to 3 arguments:
-* statusCode
-* message
+* statusCode (defaults to 404)
+* message (defaults to 'Not Found')
 * cors (defaults to `true`)
 
 ```js
@@ -36,7 +47,6 @@ you would do something like this:
 
 ```js
 const errorResponse = HttpError(401, `You shall not pass`);
-callback(null, errorResponse);
 ```
 
 If you don't provide a third `cors` argument, `HttpError` will add a `cors` header to your response `{ 'Access-Control-Allow-Origin': '*' }`
@@ -65,6 +75,20 @@ An API response will look like following:
 }
 ```
 
+`HttpError` provides default values for all function parameters:
+
+```js
+const errorResponse = HttpError();
+
+// will return following json object
+
+{
+  statusCode: 404,
+  body: '"Not Found"',
+  headers: { 'Access-Control-Allow-Origin': '*', Vary: 'Origin' }
+}
+```
+
 ## Response
 By using `Response` function, you can create a standardized API response.
 `Response` takes 3 arguments:
@@ -75,7 +99,6 @@ By using `Response` function, you can create a standardized API response.
 
 ```js
 const response = Response(201, `{'foo':'bar'}`);
-callback(null, response);
 ```
 
 If you don't provide a third `cors` argument, `Response` will add a `cors` header to your response `{ 'Access-Control-Allow-Origin': '*' }`
@@ -84,6 +107,20 @@ If you don't want your responses `cors`-ified pass `false` a 3rd argument.
 
 ```js
 const response = Response(201, `{'foo':'bar'}`, true);
+```
+
+`Response` provides default values for most of the function parameters:
+
+```js
+const response = Response();
+
+// response would have following structure
+{
+  statusCode: 200,
+  headers: {
+    // cors related and other headers
+  }
+}
 ```
 
 A `Response` will return a `json` object with following structure:
@@ -97,6 +134,8 @@ return {
   }),
   headers
 }
+
+// body will be ommited if nothing is passed to the Response function
 ```
 
 If you pass the `data` argument, `shawerma` will wrap it in an `Array` if it's not one already.
@@ -168,7 +207,7 @@ const options = {
 module.exports.handler = createHandler(listAll, options)
 ```
 
-IMPORTANT: whenever you create your handler with the help of `createHandler` it will check whether a user calling your function is authenticated (`event.requestContext.authorizer`) or not and whether the request is coming from the allowed `origin` (`event.headers.origin !== process.env.ORIGIN`).
+> IMPORTANT: whenever you create your handler with the help of `createHandler` it will check whether a user calling your function is authenticated (`event.requestContext.authorizer`) or not and whether the request is coming from the allowed `origin` (`event.headers.origin !== process.env.ORIGIN`).
 
 Those checks are not optional yet - they will be in the future.
 
@@ -185,8 +224,6 @@ if (!event.requestContext.authorizer) {
 ```
 
 ### Cors
-`const Cors = require('./lib/cors')`
-
 `Cors` exports two functions:
 - `validOrigins` uses `process.env.ORIGIN` string to create an array of valid `origins`
 - `checkOrigin` takes an `event` and returns whether the `event.headers.origin` is one of the allowed origins
@@ -212,6 +249,3 @@ Setting `CORS: false` will allow requests from any origins.
 setting the environment variable `SECURITY: false`.
 
 Security headers will will take the `ORIGIN` settings into account.
-
-## TODOs
-* Add tests for the `handler`

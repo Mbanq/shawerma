@@ -4,38 +4,34 @@ export module log {
   export function debug(args: any): void
 }
 
-export function Response(statusCode: number, data: any, cors = true): Response
-
-export type Response = {
+export function Response(
   statusCode: number,
-  body: string,
-  headers?: object,
-}
+  data: any,
+  cors: boolean = true
+): ResponseType
 
-export function HttpError(statusCode: number, message: string, cors = true): HttpError
-
-export type HttpError = {
+export function HttpError(
   statusCode: number,
-  body: string,
-  headers?: object
-}
+  message: string,
+  cors: boolean = true
+): HttpError
 
 export function createHandler(handler: any): any
 
 export interface LogType {
-    info: (args: string) => void;
-    error: (args: string) => void;
-    debug: (args: string) => void;
+  info: (args: string) => void;
+  error: (args: string) => void;
+  debug: (args: string) => void;
 }
 export interface ResponseType {
-    statusCode: number;
-    body: any;
-    headers?: object;
+  statusCode: number;
+  body: any;
+  headers?: object;
 }
 export interface HttpErrorType {
-    statusCode: number;
-    body: any;
-    headers?: object;
+  statusCode: number;
+  body: any;
+  headers?: object;
 }
 
 export interface ShawermaInstance {
